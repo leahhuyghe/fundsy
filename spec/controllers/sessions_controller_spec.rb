@@ -13,7 +13,9 @@ RSpec.describe SessionsController, type: :controller do
 
       end
       # post :create, email: "abc@abc.com", password: "abc1234"
-      it "sets the session[:user_id] to the logged in id"
+      it "sets the session[:user_id] to the logged in id" do
+  
+      end
       it "redirects to the root page"
       it "sets a flash message"
     end
