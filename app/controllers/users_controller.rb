@@ -12,8 +12,9 @@ class UsersController < ApplicationController
       redirect_to root_path, notice: "User created!"
     else
       render :new
-    end  
+    end
   end
+
 
 private
 

@@ -3,27 +3,57 @@ require 'rails_helper'
 RSpec.describe SessionsController, type: :controller do
 
   describe "#new" do
-    it "renders the new template (login form)"
+    it "renders the new template (login form)" do
+      get :new
+      expect(response).to render_template(:new)
+    end
   end
 
   describe "#create" do
     context "with valid credentials" do
       before do
         @user = User.create(first_name: "Abc", email: "abc@abc.com", password: "Abcd1234")
+         post :create, email: "abc@abc.com", password: "abcd1234"
+      end
 
-      end
-      # post :create, email: "abc@abc.com", password: "abc1234"
       it "sets the session[:user_id] to the logged in id" do
-  
+        expect(session[:user_id]).to eq(@user.id)
       end
-      it "redirects to the root page"
-      it "sets a flash message"
+
+      it "redirects to the root page" do
+        expect(response).to redirect_to root_path
+      end
+
+      it "sets a flash message" do
+        expect(flash[:notice]).to be
+       end
     end
 
     context "with invalid credentials" do
-      # post :create, email: "I'm invalid"
-      it "renders the new template"
-      it "sets a flash message"
+      def request_with_invalid_password
+         user = User.create(email: "e@e.ca", first_name: "abc", password: "abc")
+         post :create, email: user.email, password: "invalid"
+       end
+
+       it "doesn't set the session[:user_id] with invalid email" do
+         post :create, email: "I'm invalid"
+         expect(session[:user_id]).to_not be
+       end
+
+       it "doesn't set the session[:user_id] with invalid password" do
+         request_with_invalid_password
+         expect(session[:user_id]).to_not be
+       end
+
+       it "renders the new template" do
+         request_with_invalid_password
+         expect(response).to render_template(:new)
+       end
+
+       it "sets a flash message" do
+         request_with_invalid_password
+         expect(flash[:alert]).to be
+       end
     end
   end
 
