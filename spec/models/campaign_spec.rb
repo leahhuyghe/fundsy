@@ -6,8 +6,8 @@ RSpec.describe Campaign, type: :model do
     #the ={} in new_attributes makes new_attributes optional!
     def valid_attributes(new_attributes = {})
       {title:       "some valid title",
-      description:  "some valid description"
-      goal:         1000000}.merge(new_attributes)
+      description:  "some valid description",
+      goal:      1000000}.merge(new_attributes)
     end
 
     it "requires a title" do
