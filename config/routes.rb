@@ -4,4 +4,6 @@ Rails.application.routes.draw do
   root "users#new"
 
    resources :sessions, only: [:new, :create]
+
+   resources :campaigns
 end
