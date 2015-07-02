@@ -2,35 +2,33 @@ require 'rails_helper'
 
 RSpec.describe Campaign, type: :model do
   describe "validations" do
-
-    #the ={} in new_attributes makes new_attributes optional!
     def valid_attributes(new_attributes = {})
-      {title:       "some valid title",
-      description:  "some valid description",
-      goal:      1000000}.merge(new_attributes)
+      {title:       "Some valid title",
+       description: "Some valid description",
+       goal:        1000000}.merge(new_attributes)
     end
 
     it "requires a title" do
       # GIVEN: setting up the test => new Campaign object
-      campaign = Campaign.new valid_attributes(title:nil)
-      # WHEN: Validating the campaign
-      # THEN: it's invalid
+      campaign = Campaign.new valid_attributes(title: nil)
+      # WHEN: Validatin the campaign
+      # THEN: It's invalid
       # campaign.should be_invalid # <= Deprecated Syntax
-      # be_invalid is an RSpec matcher for Rails.
-      # be_invalid will call .valid? on the `campaign` object and make sure that it's false.
+      # be_invalid in an RSpec matcher for Rails
+      # be_invalid will call .valid? on the `campaign` object and make sure
+      # that it's false
       expect(campaign).to be_invalid
     end
 
     it "requires a description" do
       campaign = Campaign.new valid_attributes(description: nil)
-      campaign.title = "something"
       expect(campaign).to be_invalid
     end
 
     it "requires a goal" do
-      campaign = Campaign.save
+      campaign = Campaign.new valid_attributes(goal: nil)
       campaign.save
-      expect(campaign.errors.message).to have_key(:goal)
+      expect(campaign.errors.messages).to have_key(:goal)
     end
 
     it "requires a goal greater than 10" do
@@ -39,15 +37,16 @@ RSpec.describe Campaign, type: :model do
     end
 
     it "requires the campaign title to be unique" do
-      #GIVEN: campaign alteady created in the database
+      # GIVEN: campaign already created in the database
       Campaign.create valid_attributes
 
-      #WHEN: trying to create another campaign with the same title
+      # WHEN: trying to create another campain with the same title
       campaign = Campaign.new valid_attributes
       campaign.save
 
-      #THEN: it should have an error on the title key
+      # THEN: it should have an error on the title key
       expect(campaign.errors.messages).to have_key(:title)
     end
+
   end
 end
