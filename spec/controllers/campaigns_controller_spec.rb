@@ -110,8 +110,117 @@ RSpec.describe CampaignsController, type: :controller do
     end
   end
 
-  describe "#update" do
+  describe "#show" do
+    before { get :show, id: campaign.id }
 
+    it "renders the show template" do
+      expect(response).to render_template(:show)
+    end
+
+    it "instantiates an instance variable with the passed id" do
+      expect(assigns(:campaign)).to eq(campaign)
+    end
   end
 
-end
+  describe "#index" do
+    it "renders the index template" do
+      get :index
+      expect(response).to render_template(:index)
+    end
+
+    it "instantiates campaigns variable a list of all campaigns in DB" do
+      campaign # this calls the variable in the `let` which creates a campaign
+      campaign_1 = create(:campaign)
+      get :index
+      expect(assigns(:campaigns)).to eq([campaign, campaign_1])
+    end
+  end
+
+  describe "#update" do
+    context "with user not signed in" do
+      it "redirects to sign in page" do
+        patch :update, id: campaign.id
+        expect(response).to redirect_to(new_session_path)
+      end
+    end
+    context "with user signed in" do
+      before do
+        request.session[:user_id] = user.id
+      end
+
+      context "user is not the owner of the campaign" do
+        it "raises an error" do
+          request.session[:user_id] = user_1.id
+          # expect { patch :update, id: campaign.id }.to raise_error(ActiveRecord::RecordNotFound)
+          expect do
+            patch :update, id: campaign.id
+          end.to raise_error(ActiveRecord::RecordNotFound)
+
+        end
+
+      end
+      context "user is the owner of the campaign" do
+        context "with valid update attributes" do
+          before do
+            patch :update, id: campaign.id, campaign: {title: "abc"}
+          end
+
+          it "updates the passed values in the database" do
+            expect(campaign.reload.title).to eq("abc")
+          end
+
+          it "redirects to the show page" do
+            expect(response).to redirect_to(campaign_path(campaign))
+          end
+
+          it "sets a flash message" do
+            expect(flash[:notice]).to be
+          end
+        end
+        context "with invalid update attributes" do
+          before do
+            patch :update, id: campaign.id, campaign: {title: "", description: "abc"}
+          end
+
+          it "doesn't update any field in the database" do
+            expect(campaign.reload.description).to_not eq("abc")
+          end
+
+          it "renders the edit page" do
+            expect(response).to render_template(:edit)
+          end
+
+          it "sets a flash message" do
+            expect(flash[:alert]).to be
+          end
+        end
+      end
+    end
+  end
+
+  describe "#destroy" do
+    context "without a signed in user" do
+      it "redirects to new session path" do
+      #  expect(response).to redirect_to new_session_path
+      end
+    end
+
+    context "with signed in user" do
+      context "with the owner logged in" do
+        it "removes the campaign from the database" do
+          delete :destroy
+            expect(Campaign.find_by_id(campaign))
+          end
+        end
+
+        it "redirects to the index page"
+        it "sets a flash message"
+      end
+      context "with non-owner logged in" do
+        it "raises an error" do
+          request.session[:user_id] = user_1.id
+          expect { delete :destroy, id: campaign.id }.to raise_error(ActiveRecord::RecordNotFound)
+        end
+      end
+    end
+  end
