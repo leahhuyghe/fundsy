@@ -17,6 +17,9 @@ class CampaignsController < ApplicationController
     if @campaign.save
       redirect_to campaign_path(@campaign), notice: "Campaign created!"
     else
+      #this will generate an associated number of reward levels that is the difference between the default number and the accepted count.
+      reward_level_count = @campaign.reward_levels.length
+      reward_level_count.times { @campaign.reward_levels.build}
       render :new
     end
   end
@@ -52,5 +55,15 @@ private
   def campaign_params
     params.require(:campaign).permit(:title, :description, :due_date, :goal)
   end
+
+  def find_campaign
+    @campaign = current_user.campaigns.find params[:id]
+  end
+
+  def campaign_params
+    params.require(:campaign).permit(:title, :description, :due_date, :goal, {reward_levels_attributes: [:title, :description, :amount]})
+  end
+
+
 
 end

@@ -1,1 +1,5 @@
-<h2>Show Campaigns</h2>
+<h1>Show Campaigns</h1>
+<%= @campaign.title %>
+<%= @campaign.description %>
+<%= link_to "edit", edit_campaign_path(@campaign) %>
+<%= link_to "delete", @campaign, method: :delete, data: {confirm: "Are you sure?"} %>

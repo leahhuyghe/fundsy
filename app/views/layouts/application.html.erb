@@ -1,12 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Fundsy</title>
+  <title>Fund.sy</title>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
 </head>
 <body>
+
+<div class="container">
+  <%= render "layouts/nav" %>
+  <% if notice %>
+    <div class="success"><%= notice %></div>
+  <% elsif alert %> %>
+    <div class="alert alert-danger"><%= alert %>
+  <% end %>
+
+  </div>
+</div>
+
 
 <%= yield %>
 

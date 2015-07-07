@@ -48,5 +48,23 @@ RSpec.describe Campaign, type: :model do
       expect(campaign.errors.messages).to have_key(:title)
     end
 
+
+    describe "Edit a Campaign" do
+      let!(:user) {create(:user)}
+      let!(:campaign) {create(:campaign, user: user)}
+      it "updates the campaign with new information" do
+        login_via_web(user)
+
+        visit edit_campaign_path(campaign)
+        fill_in "Title", with: "New Stuff"
+        fill_in "Description", with: "stuff with things"
+        fill_in "Goal", with: 15
+        click_on "Update Campaign"
+        expect(current_path).to eq(campaign_path(campaign))
+      end
+    end
+
+
   end
+
 end

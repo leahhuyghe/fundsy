@@ -1,1 +1,10 @@
-<h2>Index</h2>
+<h1>Welcome to Fund.sy</h1>
+<h2>All Campaigns</h2>
+
+<% @campaigns.each do |campaign| %>
+<div class="well">
+  <%= campaign.title.upcase %></h1>
+      <%= campaign.description %>
+</div>
+  <h1>
+<% end %>
