@@ -2,7 +2,7 @@ class CampaignsController < ApplicationController
   before_action :authenticate_user!, only: [:create, :edit, :update, :destroy]
 
   def index
-    @campaigns = Campaign.all
+    @campaigns = Campaign.published 
   end
 
   def new

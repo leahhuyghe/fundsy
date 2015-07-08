@@ -3,3 +3,6 @@
 <%= @campaign.description %>
 <%= link_to "edit", edit_campaign_path(@campaign) %>
 <%= link_to "delete", @campaign, method: :delete, data: {confirm: "Are you sure?"} %>
+<%= link_to "publish", campaign_publishings_path(@campaign), method: :post, data: {alert: "Are you sure? You won't be able to edit it again."} %>
+
+<!-- Fill this area with the wells of the pledges from github -->

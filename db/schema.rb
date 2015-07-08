@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150703211718) do
+ActiveRecord::Schema.define(version: 20150708161601) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(version: 20150703211718) do
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.integer  "user_id"
+    t.string   "aasm_state"
   end
 
   add_index "campaigns", ["user_id"], name: "index_campaigns_on_user_id", using: :btree
@@ -39,6 +40,21 @@ ActiveRecord::Schema.define(version: 20150703211718) do
   add_index "pledges", ["campaign_id"], name: "index_pledges_on_campaign_id", using: :btree
   add_index "pledges", ["user_id"], name: "index_pledges_on_user_id", using: :btree
 
+  create_table "reward_levels", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "titles", force: :cascade do |t|
+    t.text     "description"
+    t.integer  "amount"
+    t.integer  "campaign_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "titles", ["campaign_id"], name: "index_titles_on_campaign_id", using: :btree
+
   create_table "users", force: :cascade do |t|
     t.string   "first_name"
     t.string   "last_name"
@@ -51,4 +67,5 @@ ActiveRecord::Schema.define(version: 20150703211718) do
   add_foreign_key "campaigns", "users"
   add_foreign_key "pledges", "campaigns"
   add_foreign_key "pledges", "users"
+  add_foreign_key "titles", "campaigns"
 end

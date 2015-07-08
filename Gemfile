@@ -15,6 +15,8 @@ gem 'simplecov', :require => false, :group => :test
 gem 'bootstrap'
 gem 'bootstrap-sass'
 gem 'quiet_assets'
+gem 'cocoon'
+gem 'aasm'
 
 group :development, :test do
   gem 'rspec-rails'
